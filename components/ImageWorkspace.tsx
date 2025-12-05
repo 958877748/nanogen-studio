@@ -1,6 +1,5 @@
-import React, { useState, useRef, useCallback } from 'react';
-import { generateOrEditImage } from '../services/geminiService';
-import { HistoryItem, GenerationStatus } from '../types';
+import React, { useState, useRef, useCallback, useEffect } from 'react';
+import { HistoryItem, GenerationStatus } from '@/types';
 import { Spinner } from './Spinner';
 
 interface ImageWorkspaceProps {
@@ -13,8 +12,13 @@ export const ImageWorkspace: React.FC<ImageWorkspaceProps> = ({ onImageGenerated
   const [resultImage, setResultImage] = useState<string | null>(null);
   const [status, setStatus] = useState<GenerationStatus>('idle');
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [isClient, setIsClient] = useState(false);
   
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -36,26 +40,37 @@ export const ImageWorkspace: React.FC<ImageWorkspaceProps> = ({ onImageGenerated
     setResultImage(null);
 
     try {
-      const response = await generateOrEditImage(prompt, inputImage || undefined);
-      
-      if (response.image) {
-        setResultImage(response.image);
+      const response = await fetch('/api/gemini', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          prompt,
+          image: inputImage,
+          type: inputImage ? 'edit' : 'generate'
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.image) {
+        setResultImage(data.image);
         setStatus('success');
-        
+
         // Save to history
         const newItem: HistoryItem = {
           id: Date.now().toString(),
           timestamp: Date.now(),
           prompt,
-          resultImage: response.image,
+          resultImage: data.image,
           originalImage: inputImage || undefined,
           type: inputImage ? 'edit' : 'generation'
         };
         onImageGenerated(newItem);
       } else {
         setStatus('error');
-        setErrorMsg("The model generated text instead of an image. Try refining your prompt.");
-        console.warn("Text response:", response.text);
+        setErrorMsg(data.error || "Failed to generate image. Please try again.");
       }
     } catch (error) {
       console.error(error);
@@ -185,10 +200,14 @@ export const ImageWorkspace: React.FC<ImageWorkspaceProps> = ({ onImageGenerated
              )}
              
              {resultImage ? (
-               <div className="relative w-full h-full flex items-center justify-center bg-checkered p-4">
-                 <img 
-                   src={resultImage} 
-                   alt="Result" 
+               <div className="relative w-full h-full flex items-center justify-center p-4" style={{
+                 backgroundImage: 'linear-gradient(45deg, #1e293b 25%, transparent 25%), linear-gradient(-45deg, #1e293b 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #1e293b 75%), linear-gradient(-45deg, transparent 75%, #1e293b 75%)',
+                 backgroundSize: '20px 20px',
+                 backgroundPosition: '0 0, 0 10px, 10px -10px, -10px 0px'
+               }}>
+                 <img
+                   src={resultImage}
+                   alt="Result"
                    className="max-h-full max-w-full object-contain rounded-lg shadow-2xl"
                  />
                  <div className="absolute top-4 right-4 flex gap-2">
@@ -214,3 +233,5 @@ export const ImageWorkspace: React.FC<ImageWorkspaceProps> = ({ onImageGenerated
     </div>
   );
 };
+
+export default ImageWorkspace;

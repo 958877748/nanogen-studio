@@ -1,17 +1,15 @@
 
 import React from 'react';
-import { UserButton } from '@clerk/clerk-react';
-import { User } from '../types';
+import { UserButton } from '@clerk/nextjs';
 
 interface NavbarProps {
   activeTab: 'create' | 'history';
   setActiveTab: (tab: 'create' | 'history') => void;
-  user: User | null;
 }
 
-export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab, user }) => {
+const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab }) => {
   return (
-    <nav className="sticky top-0 z-50 bg-darker/80 backdrop-blur-md border-b border-white/10">
+    <div className="sticky top-0 z-50 bg-darker/80 backdrop-blur-md border-b border-white/10">
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white font-bold shadow-lg shadow-primary/25">
@@ -46,20 +44,20 @@ export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab, user })
         </div>
 
         <div className="flex items-center gap-3">
-          {user && (
-            <div className="pl-3 border-l border-white/10">
-              <UserButton
-                appearance={{
-                  elements: {
-                    avatarBox: "w-8 h-8",
-                    userButtonTrigger: "focus:shadow-none"
-                  }
-                }}
-              />
-            </div>
-          )}
+          <div className="pl-3 border-l border-white/10">
+            <UserButton
+              appearance={{
+                elements: {
+                  avatarBox: "w-8 h-8",
+                  userButtonTrigger: "focus:shadow-none"
+                }
+              }}
+            />
+          </div>
         </div>
       </div>
-    </nav>
+    </div>
   );
-};
+}
+
+export default Navbar;

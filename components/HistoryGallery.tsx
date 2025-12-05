@@ -1,12 +1,12 @@
 import React from 'react';
-import { HistoryItem } from '../types';
+import { HistoryItem } from '@/types';
 
 interface HistoryGalleryProps {
   items: HistoryItem[];
   onClear: () => void;
 }
 
-export const HistoryGallery: React.FC<HistoryGalleryProps> = ({ items, onClear }) => {
+const HistoryGallery: React.FC<HistoryGalleryProps> = ({ items, onClear }) => {
   if (items.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[400px] text-slate-500">
@@ -78,4 +78,6 @@ export const HistoryGallery: React.FC<HistoryGalleryProps> = ({ items, onClear }
       </div>
     </div>
   );
-};
+}
+
+export default HistoryGallery;

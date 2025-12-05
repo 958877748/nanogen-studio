@@ -24,3 +24,19 @@ dist-ssr
 *.sw?
 
 package-lock.json
+
+# Next.js
+.next
+out
+
+# Production build
+build
+
+# Environment variables
+.env*.local
+
+# Vercel
+.vercel
+
+# Turbo
+.turbo

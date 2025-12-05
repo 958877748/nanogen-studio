@@ -2,9 +2,9 @@
 
 import { useState, useEffect } from 'react'
 import { SignedIn, SignedOut, RedirectToSignIn } from '@clerk/nextjs'
-import ImageWorkspace from '../../components/ImageWorkspace'
-import HistoryGallery from '../../components/HistoryGallery'
-import Navbar from '../../components/Navbar'
+import ImageWorkspace from '@/components/ImageWorkspace'
+import HistoryGallery from '@/components/HistoryGallery'
+import Navbar from '@/components/Navbar'
 import { HistoryItem } from '@/types'
 
 export default function Home() {

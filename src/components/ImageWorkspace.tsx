@@ -13,6 +13,7 @@ export const ImageWorkspace: React.FC<ImageWorkspaceProps> = ({ onImageGenerated
   const [status, setStatus] = useState<GenerationStatus>('idle');
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [isClient, setIsClient] = useState(false);
+  const [imageSize, setImageSize] = useState<string>('1024x1024');
   
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -48,7 +49,8 @@ export const ImageWorkspace: React.FC<ImageWorkspaceProps> = ({ onImageGenerated
         body: JSON.stringify({
           prompt,
           image: inputImage,
-          type: inputImage ? 'edit' : 'generate'
+          type: inputImage ? 'edit' : 'generate',
+          size: imageSize
         }),
       });
 
@@ -149,7 +151,7 @@ export const ImageWorkspace: React.FC<ImageWorkspaceProps> = ({ onImageGenerated
           {/* Prompt Input */}
           <div className="flex-grow flex flex-col justify-end space-y-4">
              <label className="text-sm font-medium text-slate-300 ml-1">
-               {inputImage ? "Instructions for Nano Banana" : "Prompt"}
+               {inputImage ? "Instructions for ModelScope" : "Prompt"}
              </label>
             <textarea
               value={prompt}
@@ -160,6 +162,22 @@ export const ImageWorkspace: React.FC<ImageWorkspaceProps> = ({ onImageGenerated
               className="w-full bg-darker rounded-xl border border-slate-700 p-4 text-slate-100 placeholder:text-slate-600 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary min-h-[120px] resize-none"
             />
             
+            {/* Size Selection */}
+            {!inputImage && (
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-slate-300 ml-1">Image Size</label>
+                <select
+                  value={imageSize}
+                  onChange={(e) => setImageSize(e.target.value)}
+                  className="w-full bg-darker rounded-xl border border-slate-700 p-3 text-slate-100 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary"
+                >
+                  <option value="256x256">256×256 (~7秒)</option>
+                  <option value="512x512">512×512 (~7秒)</option>
+                  <option value="1024x1024">1024×1024 (~14秒)</option>
+                </select>
+              </div>
+            )}
+
             <button
               onClick={handleGenerate}
               disabled={status === 'loading' || !prompt.trim()}
@@ -195,7 +213,7 @@ export const ImageWorkspace: React.FC<ImageWorkspaceProps> = ({ onImageGenerated
              {status === 'loading' && (
                <div className="absolute inset-0 z-10 bg-darker/80 backdrop-blur-sm flex flex-col items-center justify-center gap-4">
                  <Spinner size="lg" />
-                 <p className="text-primary animate-pulse">Consulting Nano Banana...</p>
+                 <p className="text-primary animate-pulse">Generating with ModelScope...</p>
                </div>
              )}
              

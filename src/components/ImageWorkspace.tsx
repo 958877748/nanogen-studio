@@ -173,6 +173,7 @@ export const ImageWorkspace: React.FC<ImageWorkspaceProps> = ({ onImageGenerated
                 >
                   <option value="256x256">256×256 (~7秒)</option>
                   <option value="512x512">512×512 (~7秒)</option>
+                  <option value="720x1280">720×1280 (~10秒)</option>
                   <option value="1024x1024">1024×1024 (~14秒)</option>
                 </select>
               </div>

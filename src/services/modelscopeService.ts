@@ -102,6 +102,8 @@ export const getEstimatedGenerationTime = (size: string): number => {
       return 7;
     case '512x512':
       return 7;
+    case '720x1280':
+      return 10;
     case '1024x1024':
       return 14;
     default:

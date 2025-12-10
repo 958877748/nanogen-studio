@@ -13,7 +13,7 @@ export const ImageWorkspace: React.FC<ImageWorkspaceProps> = ({ onImageGenerated
   const [status, setStatus] = useState<GenerationStatus>('idle');
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [isClient, setIsClient] = useState(false);
-  const [imageSize, setImageSize] = useState<string>('1024x1024');
+  const [imageSize, setImageSize] = useState<string>('720x1280');
   
   const fileInputRef = useRef<HTMLInputElement>(null);
 

@@ -2,17 +2,12 @@ import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server'
 
 const isProtectedRoute = createRouteMatcher(['/'])
 
-// Check if Clerk environment variables are set
-const hasClerkEnv = !!process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY && !!process.env.CLERK_SECRET_KEY
-
-const middleware = clerkMiddleware(async (auth, req) => {
+export default clerkMiddleware(async (auth, req) => {
   if (isProtectedRoute(req)) {
     const session = await auth()
     // Clerk will automatically handle the redirect if not authenticated
   }
 })
-
-export default hasClerkEnv ? middleware : (req: Request) => req
 
 export const config = {
   matcher: [

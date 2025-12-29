@@ -19,6 +19,13 @@ export default function RootLayout({
       publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY}
       afterSignInUrl="/"
       afterSignUpUrl="/"
+      appearance={{
+        elements: {
+          card: {
+            boxShadow: '0 0 0 1px rgba(0,0,0,.05), 0 2px 8px rgba(0,0,0,.04)',
+          },
+        },
+      }}
     >
       <html lang="zh">
         <body className={inter.className}>{children}</body>

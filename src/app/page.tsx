@@ -10,28 +10,67 @@ import { HistoryItem } from '@/types'
 export default function Home() {
   const [activeTab, setActiveTab] = useState<'create' | 'history'>('create')
   const [history, setHistory] = useState<HistoryItem[]>([])
-  const [isClient, setIsClient] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
+
+  // 加载历史记录
+  const loadHistory = async () => {
+    try {
+      const response = await fetch('/api/history')
+      if (response.ok) {
+        const data = await response.json()
+        setHistory(data)
+      }
+    } catch (error) {
+      console.error('Failed to load history:', error)
+    } finally {
+      setIsLoading(false)
+    }
+  }
 
   useEffect(() => {
-    setIsClient(true)
-    const savedHistory = localStorage.getItem('imageHistory')
-    if (savedHistory) {
-      setHistory(JSON.parse(savedHistory))
-    }
+    loadHistory()
   }, [])
 
-  const handleImageGenerated = (item: HistoryItem) => {
+  const handleImageGenerated = async (item: HistoryItem) => {
     const newHistory = [item, ...history]
     setHistory(newHistory)
-    localStorage.setItem('imageHistory', JSON.stringify(newHistory))
+
+    // 保存到数据库
+    try {
+      await fetch('/api/history', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(item)
+      })
+    } catch (error) {
+      console.error('Failed to save history:', error)
+    }
   }
 
-  const handleClearHistory = () => {
+  const handleClearHistory = async () => {
     setHistory([])
-    localStorage.removeItem('imageHistory')
+
+    // 从数据库删除
+    try {
+      await fetch('/api/history', { method: 'DELETE' })
+    } catch (error) {
+      console.error('Failed to clear history:', error)
+    }
   }
 
-  if (!isClient) {
+  const handleDeleteItem = async (itemId: string) => {
+    const newHistory = history.filter(item => item.id !== itemId)
+    setHistory(newHistory)
+
+    // 从数据库删除
+    try {
+      await fetch(`/api/history/${itemId}`, { method: 'DELETE' })
+    } catch (error) {
+      console.error('Failed to delete history item:', error)
+    }
+  }
+
+  if (isLoading) {
     return (
       <div className="min-h-screen bg-gray-900 flex items-center justify-center">
         <div className="text-white">Loading...</div>
@@ -48,7 +87,7 @@ export default function Home() {
           {activeTab === 'create' ? (
             <ImageWorkspace onImageGenerated={handleImageGenerated} />
           ) : (
-            <HistoryGallery items={history} onClear={handleClearHistory} />
+            <HistoryGallery items={history} onClear={handleClearHistory} onDelete={handleDeleteItem} />
           )}
         </main>
       </SignedIn>

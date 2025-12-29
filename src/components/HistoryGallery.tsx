@@ -4,9 +4,10 @@ import { HistoryItem } from '@/types';
 interface HistoryGalleryProps {
   items: HistoryItem[];
   onClear: () => void;
+  onDelete: (id: string) => void;
 }
 
-const HistoryGallery: React.FC<HistoryGalleryProps> = ({ items, onClear }) => {
+const HistoryGallery: React.FC<HistoryGalleryProps> = ({ items, onClear, onDelete }) => {
   if (items.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[400px] text-slate-500">
@@ -50,6 +51,13 @@ const HistoryGallery: React.FC<HistoryGalleryProps> = ({ items, onClear }) => {
                  >
                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
                  </a>
+                 <button
+                   onClick={() => onDelete(item.id)}
+                   className="p-3 bg-red-500/20 hover:bg-red-500/40 rounded-full text-red-400 backdrop-blur-md transition-colors"
+                   title="Delete"
+                 >
+                   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                 </button>
                </div>
 
                {/* Badge type */}
@@ -78,6 +86,6 @@ const HistoryGallery: React.FC<HistoryGalleryProps> = ({ items, onClear }) => {
       </div>
     </div>
   );
-}
+};
 
 export default HistoryGallery;

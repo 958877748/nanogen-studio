@@ -6,13 +6,22 @@ import { HistoryItem } from '@/types';
 // GET - 获取用户的历史记录
 export async function GET() {
   try {
+    console.log('API: /api/history GET called');
+    console.log('Clerk keys configured:', {
+      hasPublishableKey: !!process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY,
+      hasSecretKey: !!process.env.CLERK_SECRET_KEY
+    });
+
     const authResult = await auth();
-    console.log('Auth result:', authResult);
-    const { userId } = authResult;
-    if (!userId) {
+    console.log('Auth result:', JSON.stringify(authResult, null, 2));
+
+    if (!authResult || !authResult.userId) {
       console.log('No userId found');
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json({ error: 'Unauthorized - No userId' }, { status: 401 });
     }
+
+    const { userId } = authResult;
+    console.log('User ID:', userId);
 
     const records = await getImageHistory(userId);
     

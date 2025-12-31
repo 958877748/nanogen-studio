@@ -17,16 +17,12 @@ export default function Home() {
   const loadHistory = async () => {
     setIsLoading(true)
     try {
-      console.log('=== Frontend Debug: Getting token ===')
       const token = await getToken()
-      console.log('Token retrieved:', token ? 'SUCCESS' : 'NULL/EMPTY')
-      console.log('Making request with Authorization header...')
       const response = await fetch('/api/history', {
         headers: {
           'Authorization': `Bearer ${token}`
         }
       })
-      console.log('Response status:', response.status)
       if (response.ok) {
         const data = await response.json()
         setHistory(data)

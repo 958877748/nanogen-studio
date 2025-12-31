@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { SignedIn, SignedOut, RedirectToSignIn, useAuth } from '@clerk/nextjs'
+import { SignedIn, SignedOut, RedirectToSignIn } from '@clerk/nextjs'
 import ImageWorkspace from '@/components/ImageWorkspace'
 import HistoryGallery from '@/components/HistoryGallery'
 import Navbar from '@/components/Navbar'
@@ -11,18 +11,12 @@ export default function Home() {
   const [activeTab, setActiveTab] = useState<'create' | 'history'>('create')
   const [history, setHistory] = useState<HistoryItem[]>([])
   const [isLoading, setIsLoading] = useState(false)
-  const { getToken } = useAuth()
 
   // 加载历史记录
   const loadHistory = async () => {
     setIsLoading(true)
     try {
-      const token = await getToken()
-      const response = await fetch('/api/history', {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      })
+      const response = await fetch('/api/history')
       if (response.ok) {
         const data = await response.json()
         setHistory(data)
@@ -47,12 +41,10 @@ export default function Home() {
 
     // 保存到数据库
     try {
-      const token = await getToken()
       await fetch('/api/history', {
         method: 'POST',
         headers: { 
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify(item)
       })
@@ -66,12 +58,8 @@ export default function Home() {
 
     // 从数据库删除
     try {
-      const token = await getToken()
       await fetch('/api/history', { 
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
+        method: 'DELETE'
       })
     } catch (error) {
       console.error('Failed to clear history:', error)
@@ -84,12 +72,8 @@ export default function Home() {
 
     // 从数据库删除
     try {
-      const token = await getToken()
       await fetch(`/api/history/${itemId}`, { 
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
+        method: 'DELETE'
       })
     } catch (error) {
       console.error('Failed to delete history item:', error)

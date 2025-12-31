@@ -1,5 +1,4 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react';
-import { useAuth } from '@clerk/nextjs';
 import { HistoryItem, GenerationStatus } from '@/types';
 import { Spinner } from './Spinner';
 
@@ -15,7 +14,6 @@ export const ImageWorkspace: React.FC<ImageWorkspaceProps> = ({ onImageGenerated
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [isClient, setIsClient] = useState(false);
   const [imageSize, setImageSize] = useState<string>('720x1280');
-  const { getToken } = useAuth();
   
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -43,12 +41,10 @@ export const ImageWorkspace: React.FC<ImageWorkspaceProps> = ({ onImageGenerated
     setResultImage(null);
 
     try {
-      const token = await getToken();
       const response = await fetch('/api/ai', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify({
           prompt,

@@ -1,7 +1,8 @@
 import { clerkMiddleware } from '@clerk/nextjs/server'
 
-export default clerkMiddleware((auth, req) => {
-  console.log('User ID in middleware:', auth.sessionClaims?.sub)
+export default clerkMiddleware(async (auth, req) => {
+  const authResult = await auth()
+  console.log('User ID in middleware:', authResult.sessionClaims?.sub)
 })
 
 export const config = {

@@ -17,7 +17,12 @@ export default function Home() {
   const loadHistory = async () => {
     setIsLoading(true)
     try {
-      const response = await fetch('/api/history')
+      const token = await getToken()
+      const response = await fetch('/api/history', {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      })
       if (response.ok) {
         const data = await response.json()
         setHistory(data)
@@ -42,9 +47,13 @@ export default function Home() {
 
     // 保存到数据库
     try {
+      const token = await getToken()
       await fetch('/api/history', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
         body: JSON.stringify(item)
       })
     } catch (error) {
@@ -75,7 +84,13 @@ export default function Home() {
 
     // 从数据库删除
     try {
-      await fetch(`/api/history/${itemId}`, { method: 'DELETE' })
+      const token = await getToken()
+      await fetch(`/api/history/${itemId}`, { 
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      })
     } catch (error) {
       console.error('Failed to delete history item:', error)
     }

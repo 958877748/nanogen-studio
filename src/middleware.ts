@@ -1,8 +1,7 @@
 import { clerkMiddleware } from '@clerk/nextjs/server'
 
 export default clerkMiddleware((auth, req) => {
-  console.log('Middleware: Secret key length:', process.env.CLERK_SECRET_KEY?.length)
-  console.log('Middleware: Secret key ends with newline:', process.env.CLERK_SECRET_KEY?.endsWith('\n'))
+  console.log('User ID in middleware:', auth.sessionClaims?.sub)
 })
 
 export const config = {

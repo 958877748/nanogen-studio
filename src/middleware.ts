@@ -2,7 +2,17 @@ import { clerkMiddleware } from '@clerk/nextjs/server'
 
 export default clerkMiddleware(async (auth, req) => {
   const authResult = await auth()
-  console.log('User ID in middleware:', authResult)
+  const headers = req.headers
+  console.log('=== Middleware Debug ===')
+  console.log('Authorization header:', headers.get('authorization'))
+  console.log('Auth result:', JSON.stringify({
+    tokenType: authResult.tokenType,
+    sessionClaims: authResult.sessionClaims,
+    sessionId: authResult.sessionId,
+    userId: authResult.userId,
+    isAuthenticated: authResult.isAuthenticated
+  }, null, 2))
+  console.log('=======================')
 })
 
 export const config = {

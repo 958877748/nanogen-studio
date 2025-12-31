@@ -1,17 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { currentUser } from '@clerk/nextjs/server';
+import { auth } from '@clerk/nextjs/server';
 import { saveImageHistory, getImageHistory, deleteImageHistory } from '@/lib/db';
 import { HistoryItem } from '@/types';
 
 // GET - 获取用户的历史记录
 export async function GET() {
   try {
-    const user = await currentUser();
-    if (!user) {
+    const { userId } = await auth();
+    if (!userId) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const records = await getImageHistory(user.id);
+    const records = await getImageHistory(userId);
     
     // 转换为 HistoryItem 格式
     const history: HistoryItem[] = records.map(record => ({
@@ -33,8 +33,8 @@ export async function GET() {
 // POST - 保存新的历史记录
 export async function POST(request: NextRequest) {
   try {
-    const user = await currentUser();
-    if (!user) {
+    const { userId } = await auth();
+    if (!userId) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
@@ -42,7 +42,7 @@ export async function POST(request: NextRequest) {
 
     await saveImageHistory({
       id: item.id,
-      user_id: user.id,
+      user_id: userId,
       timestamp: item.timestamp,
       prompt: item.prompt,
       result_image: item.resultImage,
@@ -60,12 +60,12 @@ export async function POST(request: NextRequest) {
 // DELETE - 删除用户的所有历史记录
 export async function DELETE() {
   try {
-    const user = await currentUser();
-    if (!user) {
+    const { userId } = await auth();
+    if (!userId) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    await deleteImageHistory(user.id);
+    await deleteImageHistory(userId);
 
     return NextResponse.json({ success: true });
   } catch (error) {

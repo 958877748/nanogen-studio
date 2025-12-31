@@ -31,6 +31,13 @@ export default function Home() {
     loadHistory()
   }, [])
 
+  // 切换到历史记录标签页时重新加载
+  useEffect(() => {
+    if (activeTab === 'history') {
+      loadHistory()
+    }
+  }, [activeTab])
+
   const handleImageGenerated = async (item: HistoryItem) => {
     const newHistory = [item, ...history]
     setHistory(newHistory)

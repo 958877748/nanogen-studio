@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { currentUser } from '@clerk/nextjs/server';
+import { auth } from '@clerk/nextjs/server';
 import { deleteImageHistoryItem } from '@/lib/db';
 
 // DELETE - 删除单个历史记录
@@ -8,13 +8,13 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const user = await currentUser();
-    if (!user) {
+    const { userId } = await auth();
+    if (!userId) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const { id: itemId } = await params;
-    await deleteImageHistoryItem(user.id, itemId);
+    await deleteImageHistoryItem(userId, itemId);
 
     return NextResponse.json({ success: true });
   } catch (error) {

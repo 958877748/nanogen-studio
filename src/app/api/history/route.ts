@@ -6,8 +6,11 @@ import { HistoryItem } from '@/types';
 // GET - 获取用户的历史记录
 export async function GET() {
   try {
-    const { userId } = await auth();
+    const authResult = await auth();
+    console.log('Auth result:', authResult);
+    const { userId } = authResult;
     if (!userId) {
+      console.log('No userId found');
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 

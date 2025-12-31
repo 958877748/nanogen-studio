@@ -27,11 +27,7 @@ export default function Home() {
     }
   }
 
-  useEffect(() => {
-    loadHistory()
-  }, [])
-
-  // 切换到历史记录标签页时重新加载
+  // 切换到历史记录标签页时加载
   useEffect(() => {
     if (activeTab === 'history') {
       loadHistory()

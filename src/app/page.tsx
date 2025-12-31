@@ -10,10 +10,11 @@ import { HistoryItem } from '@/types'
 export default function Home() {
   const [activeTab, setActiveTab] = useState<'create' | 'history'>('create')
   const [history, setHistory] = useState<HistoryItem[]>([])
-  const [isLoading, setIsLoading] = useState(true)
+  const [isLoading, setIsLoading] = useState(false)
 
   // 加载历史记录
   const loadHistory = async () => {
+    setIsLoading(true)
     try {
       const response = await fetch('/api/history')
       if (response.ok) {

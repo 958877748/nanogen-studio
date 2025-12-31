@@ -1,4 +1,5 @@
 import React from 'react';
+import { useAuth } from '@clerk/nextjs';
 import { HistoryItem } from '@/types';
 
 interface HistoryGalleryProps {
@@ -8,12 +9,16 @@ interface HistoryGalleryProps {
 }
 
 const HistoryGallery: React.FC<HistoryGalleryProps> = ({ items, onClear, onDelete }) => {
+  const { sessionClaims } = useAuth();
+  const userId = sessionClaims?.sub;
+
   if (items.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[400px] text-slate-500">
         <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" className="mb-4 opacity-50"><path d="M12 20v-6M6 20V10M18 20V4"></path></svg>
         <p className="text-xl font-medium">No history yet</p>
         <p className="text-sm mt-2">Start creating in the Studio!</p>
+        {userId && <p className="text-xs mt-4 text-slate-600">User ID: {userId}</p>}
       </div>
     );
   }
@@ -21,8 +26,11 @@ const HistoryGallery: React.FC<HistoryGalleryProps> = ({ items, onClear, onDelet
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold text-white">Your Gallery</h2>
-        <button 
+        <div className="flex flex-col">
+          <h2 className="text-2xl font-bold text-white">Your Gallery</h2>
+          {userId && <p className="text-xs text-slate-500 mt-1">User ID: {userId}</p>}
+        </div>
+        <button
           onClick={onClear}
           className="px-4 py-2 text-sm text-red-400 hover:text-red-300 hover:bg-red-900/20 rounded-lg transition-colors border border-transparent hover:border-red-900/30"
         >

@@ -40,3 +40,5 @@ build
 
 # Turbo
 .turbo
+
+/tmp

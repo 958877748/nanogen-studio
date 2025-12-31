@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { SignedIn, SignedOut, RedirectToSignIn } from '@clerk/nextjs'
+import { SignedIn, SignedOut, RedirectToSignIn, useAuth } from '@clerk/nextjs'
 import ImageWorkspace from '@/components/ImageWorkspace'
 import HistoryGallery from '@/components/HistoryGallery'
 import Navbar from '@/components/Navbar'
@@ -11,6 +11,7 @@ export default function Home() {
   const [activeTab, setActiveTab] = useState<'create' | 'history'>('create')
   const [history, setHistory] = useState<HistoryItem[]>([])
   const [isLoading, setIsLoading] = useState(false)
+  const { getToken } = useAuth()
 
   // 加载历史记录
   const loadHistory = async () => {
@@ -56,7 +57,13 @@ export default function Home() {
 
     // 从数据库删除
     try {
-      await fetch('/api/history', { method: 'DELETE' })
+      const token = await getToken()
+      await fetch('/api/history', { 
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      })
     } catch (error) {
       console.error('Failed to clear history:', error)
     }

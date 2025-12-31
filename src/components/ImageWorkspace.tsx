@@ -41,10 +41,12 @@ export const ImageWorkspace: React.FC<ImageWorkspaceProps> = ({ onImageGenerated
     setResultImage(null);
 
     try {
+      const token = await getToken();
       const response = await fetch('/api/ai', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({
           prompt,

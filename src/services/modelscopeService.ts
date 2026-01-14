@@ -39,7 +39,7 @@ const MODELSCOPE_BASE_URL = 'https://api-inference.modelscope.cn/v1';
 const MODELSCOPE_IMAGE_API_URL = `${MODELSCOPE_BASE_URL}/images/generations`;
 const MODELSCOPE_TASK_API_URL = `${MODELSCOPE_BASE_URL}/tasks`;
 const MODELSCOPE_CHAT_API_URL = `${MODELSCOPE_BASE_URL}/chat/completions`;
-const IMAGE_GENERATE_MODEL_NAME = 'Qwen/Qwen-Image-2512';
+const IMAGE_GENERATE_MODEL_NAME = 'Tongyi-MAI/Z-Image-Turbo';
 const IMAGE_EDIT_MODEL_NAME = 'Qwen/Qwen-Image-Edit-2511';
 const TEXT_MODEL_NAME = 'Qwen/Qwen3-235B-A22B-Instruct-2507';
 

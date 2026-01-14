@@ -80,13 +80,7 @@ export default function Home() {
     }
   }
 
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-gray-900 flex items-center justify-center">
-        <div className="text-white">Loading...</div>
-      </div>
-    )
-  }
+  // 不在切换到画廊时显示全页加载，保留局部/组件内的占位逻辑
 
   return (
     <div className="min-h-screen bg-gray-900">
